@@ -1,5 +1,5 @@
 library(testthat)
-filename <- system.file("extdata/earthquakes.tsv.gz", package = "earthquakeVis")
+filename <- system.file("extdata/signif.txt", package = "eqv")
 data <- readr::read_delim(filename, delim = "\t")
 
 test_that("eq_clean_data returns data frame", {
