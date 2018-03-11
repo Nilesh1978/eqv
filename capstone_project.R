@@ -3,6 +3,7 @@ library(devtools)
 library(roxygen2)
 library(dplyr)
 library(ggplot2)
+library(chron)
 
 # step1: update documents
 devtools::document()
@@ -11,3 +12,4 @@ devtools::document()
 load_all()
 
 # step3: run build & reload tab under build
+devtools::check()
