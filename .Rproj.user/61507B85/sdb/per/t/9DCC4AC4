@@ -1,0 +1,21 @@
+{
+    "collab_server" : "",
+    "contents" : "#' Leaflet map of earthquakes\n#'\n#' This function creates a \\code{leaflet} map of selected earthquakes based on\n#' input NOAA earthquake cleaned data.\n#'\n#' @param data A data frame containing cleaned NOAA earthquake data\n#' @param annot_col A character. The name of the column in the data that should\n#' be used as descriptor.\n#'\n#' @return A leaflet map with earthquakes and annotations.\n#' @export\n#'\n#' @importFrom leaflet leaflet addTiles addCircleMarkers\n#'\n#' @examples\n#' \\dontrun{\n#' eq_map(data, annot_col = \"LOCATION_NAME\")\n#' }\neq_map <- function(data, annot_col) {\n\n  m <- leaflet::leaflet() %>%\n    leaflet::addTiles() %>%\n    leaflet::addCircleMarkers(lng = data$LONGITUDE, lat = data$LATITUDE,\n                              radius = data$EQ_PRIMARY, weight = 1,\n                              popup = data[[annot_col]])\n\n  m\n}\n\n\n#' Creates a label for leaflet map\n#'\n#' This function creates a label for the \\code{leaflet} map based on location\n#' name, magnitude and casualties from NOAA earthquake data\n#'\n#' @param data A data frame containing cleaned NOAA earthquake data\n#'\n#' @return A character vector with labels\n#'\n#' @details The input \\code{data.frame} needs to include columns LOCATION_NAME,\n#' EQ_PRIMARY and TOTAL_DEATHS with the earthquake location, magintude and\n#' total casualties respectively.\n#'\n#' @export\n#'\n#' @examples\n#' \\dontrun{\n#' eq_create_label(data)\n#' }\neq_create_label <- function(data) {\n  popup_text <- with(data, {\n    part1 <- ifelse(is.na(LOCATION_NAME), \"\",\n                    paste(\"<strong>Location:</strong>\",\n                          LOCATION_NAME))\n    part2 <- ifelse(is.na(EQ_PRIMARY), \"\",\n                    paste(\"<br><strong>Magnitude</strong>\",\n                          EQ_PRIMARY))\n    part3 <- ifelse(is.na(TOTAL_DEATHS), \"\",\n                    paste(\"<br><strong>Total deaths:</strong>\",\n                          TOTAL_DEATHS))\n    paste0(part1, part2, part3)\n  })\n}\n",
+    "created" : 1520547602880.000,
+    "dirty" : false,
+    "encoding" : "UTF-8",
+    "folds" : "",
+    "hash" : "2214457270",
+    "id" : "9DCC4AC4",
+    "lastKnownWriteTime" : 1520547638,
+    "last_content_update" : -2147483648,
+    "path" : "C:/Users/nndigh/Desktop/Educational/coursera/Mastering Software Development in R/CAPSTONE/package/eqv/R/leaflet_map.R",
+    "project_path" : "R/leaflet_map.R",
+    "properties" : {
+        "tempName" : "Untitled2"
+    },
+    "relative_order" : 5,
+    "source_on_save" : false,
+    "source_window" : "",
+    "type" : "r_source"
+}
