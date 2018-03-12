@@ -18,3 +18,6 @@ devtools::check()
 
 # add vignites
 devtools::use_vignette("eqv-vignette")
+
+# travis
+use_travis()
