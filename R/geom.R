@@ -94,7 +94,7 @@ GeomTimeline <-
 #'
 #' @export
 #'
-#' @importFrom ggplot2 layer
+#' @importFrom ggplot2 layer aes
 #'
 #' @examples
 #' \dontrun{

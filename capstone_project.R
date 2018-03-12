@@ -4,6 +4,7 @@ library(roxygen2)
 library(dplyr)
 library(ggplot2)
 library(chron)
+library(eqv)
 install_github("Nilesh1978/eqv")
 
 
@@ -21,3 +22,9 @@ devtools::use_vignette("eqv-vignette")
 
 # travis
 use_travis()
+
+head(data)
+tt<- data %>%
+  eq_clean_data() %>%
+  eq_location_clean()
+str(tt)

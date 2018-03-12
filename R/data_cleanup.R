@@ -40,7 +40,7 @@ eq_clean_data <- function(data) {
     dplyr::mutate_(LATITUDE = ~as.numeric(LATITUDE),
                    LONGITUDE = ~as.numeric(LONGITUDE))
 
-  data <- eq_location_clean(data)
+  #data <- eq_location_clean(data)
 
   data
 }
@@ -65,6 +65,7 @@ eq_clean_data <- function(data) {
 #'
 #' @importFrom dplyr %>% mutate
 #' @importFrom stringr str_replace str_trim str_to_title
+#' @export
 eq_location_clean <- function(data) {
   data <- data %>%
     dplyr::mutate_(LOCATION_NAME = ~LOCATION_NAME %>%
