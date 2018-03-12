@@ -6,6 +6,7 @@ library(ggplot2)
 library(chron)
 install_github("Nilesh1978/eqv")
 
+
 # step1: update documents
 devtools::document()
 
