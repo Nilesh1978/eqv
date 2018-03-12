@@ -1,0 +1,48 @@
+---
+title: "eqv vignittes"
+author: "Vignette Author"
+date: "`r Sys.Date()`"
+output: rmarkdown::html_vignette
+vignette: >
+  %\VignetteIndexEntry{Vignette Title}
+  %\VignetteEngine{knitr::rmarkdown}
+  %\VignetteEncoding{UTF-8}
+---
+
+#Package eqv allows clean up & visualization of the NOAA earthquake dataset.  The document describes some of the functionalities available in the eqv package.
+## In the example below, we will see the use of the following functions from the eqv package:
+### eq_clean_data()
+### eq_location_data()
+### geom_timeline()
+### geom_timeline_label()
+
+```{r, echo=FALSE, message=FALSE, warning=FALSE}
+library(eqv)
+library(dplyr)
+library(ggplot2)
+library(readr)
+filename <- system.file("extdata/signif.txt", package = "eqv")
+data <- readr::read_delim(filename, delim = "\t")
+data %>%
+  eq_clean_data() %>%
+  eq_location_clean %>%
+  dplyr::filter(COUNTRY %in% c("INDIA", "ITALY") & YEAR > 1990) %>%
+  ggplot2::ggplot(ggplot2::aes(x  = DATE, y = COUNTRY,color = as.numeric(TOTAL_DEATHS),size = as.numeric(EQ_PRIMARY))) + 
+  geom_timeline() + 
+  geom_timeline_label(ggplot2::aes(label = LOCATION_NAME), n_max = 5) + 
+  theme_timeline()
+
+```
+
+## Example below shows use of the following functions that can be used with leaflet package functions.
+### eq_create_label()
+### eq_map()
+
+
+```{r, echo=FALSE, message=FALSE, warning=FALSE}
+data %>% 
+  eq_clean_data() %>% 
+  dplyr::filter(COUNTRY == "MEXICO" & lubridate::year(DATE) >= 2000) %>% 
+  dplyr::mutate(popup_text = eq_create_label(.)) %>% 
+  eq_map(annot_col = "popup_text")
+```
