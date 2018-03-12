@@ -1,39 +1,50 @@
-#' Clean source data from NOAA
+#' Cleans source data from NOAA
 #'
-#' \code{eq_clean_data} generate dates, & format latitude and longitude columns
+#' \code{eq_clean_data} cleans date, latitude and longitude, and location name
+#' from the source NOAA data
 #'
 #' @param data A data frame with raw data obtained from NOAA website (see below)
 #'
-#' @return A data frame date & nyumeric latitude, longitude variables
+#' @return A data frame with cleaned date, latitude, longitude and location
+#' columns
 #'
 #' @details The function requires raw date obtained from NOAA site
 #' \url{https://www.ngdc.noaa.gov/nndc/struts/form?t=101650&s=1&d=1}. It adds
 #' a column DATE with cleaned date (Date format), transforms LATITUDE and
-#' LONGITUDE columns as numeric objects
+#' LONGITUDE columns as numeric objects and transforms LOCATION_NAME by removing
+#' the country and transforming to title case.
 #'
 #' @examples
 #' \dontrun{
-#' data <- readr::read_delim("signif.txt", delim = "\t")
+#' data <- readr::read_delim("earthquakes.tsv.gz", delim = "\t")
 #' clean_data <- eq_clean_data(data)
 #' }
 #'
 #' @importFrom dplyr %>% mutate select
+#' @importFrom lubridate ymd
+#' @importFrom stringr str_pad
 #'
 #' @export
-eq_clean_data<- function(dataset){
+eq_clean_data <- function(data) {
+  data <- data %>%
+    dplyr::mutate_(
+      year_fix = ~stringr::str_pad(as.character(abs(YEAR)), width = 4,
+                                   side = "left", pad = "0"),
+      date_paste = ~paste(year_fix, MONTH, DAY, sep = "-"),
+      DATE = ~lubridate::ymd(date_paste, truncated = 2)) %>%
+    dplyr::select_(quote(-year_fix), quote(-date_paste))
 
-  # create DATE column by combining year, month, & day cols
-  dataset2<- dataset %>%
-    dplyr::mutate(MONTH = ifelse(is.na(MONTH), 1, MONTH),
-                  DAY = ifelse(is.na(DAY), 1, DAY),
-                  julian_days = julian(MONTH, DAY, YEAR),
-                  DATE = as.Date(julian_days, origin = "1970-01-01"),
-                  LATITUDE = as.numeric(LATITUDE),
-                  LONGITUDE = as.numeric(LONGITUDE)) %>%
-    dplyr::select(I_D, FLAG_TSUNAMI, DATE, everything()) %>%
-    dplyr::select(-julian_days)
+  lubridate::year(data$DATE) <- data$YEAR
 
+  data <- data %>%
+    dplyr::mutate_(LATITUDE = ~as.numeric(LATITUDE),
+                   LONGITUDE = ~as.numeric(LONGITUDE))
+
+  data <- eq_location_clean(data)
+
+  data
 }
+
 
 #' Cleans earthquake location data
 #'
@@ -53,13 +64,12 @@ eq_clean_data<- function(dataset){
 #' }
 #'
 #' @importFrom dplyr %>% mutate
-#' @importFrom stringr str_to_title
-#' @export
-eq_location_clean<- function(dataset){
-
-  # clean up location names
-  dataset2<- dataset %>%
-    dplyr::mutate(LOCATION_NAME = gsub("^.*:\\s*", "",LOCATION_NAME),
-                  LOCATION_NAME = stringr::str_to_title(LOCATION_NAME))
-
+#' @importFrom stringr str_replace str_trim str_to_title
+eq_location_clean <- function(data) {
+  data <- data %>%
+    dplyr::mutate_(LOCATION_NAME = ~LOCATION_NAME %>%
+                     stringr::str_replace(paste0(COUNTRY, ":"), "") %>%
+                     stringr::str_trim("both") %>%
+                     stringr::str_to_title())
+  data
 }

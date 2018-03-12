@@ -4,7 +4,7 @@
 \alias{eq_location_clean}
 \title{Cleans earthquake location data}
 \usage{
-eq_location_clean(dataset)
+eq_location_clean(data)
 }
 \arguments{
 \item{data}{A data frame with raw data obtained from NOAA website}

@@ -2,28 +2,31 @@
 % Please edit documentation in R/data_cleanup.R
 \name{eq_clean_data}
 \alias{eq_clean_data}
-\title{Clean source data from NOAA}
+\title{Cleans source data from NOAA}
 \usage{
-eq_clean_data(dataset)
+eq_clean_data(data)
 }
 \arguments{
 \item{data}{A data frame with raw data obtained from NOAA website (see below)}
 }
 \value{
-A data frame date & nyumeric latitude, longitude variables
+A data frame with cleaned date, latitude, longitude and location
+columns
 }
 \description{
-\code{eq_clean_data} generate dates, & format latitude and longitude columns
+\code{eq_clean_data} cleans date, latitude and longitude, and location name
+from the source NOAA data
 }
 \details{
 The function requires raw date obtained from NOAA site
 \url{https://www.ngdc.noaa.gov/nndc/struts/form?t=101650&s=1&d=1}. It adds
 a column DATE with cleaned date (Date format), transforms LATITUDE and
-LONGITUDE columns as numeric objects
+LONGITUDE columns as numeric objects and transforms LOCATION_NAME by removing
+the country and transforming to title case.
 }
 \examples{
 \dontrun{
-data <- readr::read_delim("signif.txt", delim = "\\t")
+data <- readr::read_delim("earthquakes.tsv.gz", delim = "\\t")
 clean_data <- eq_clean_data(data)
 }
 

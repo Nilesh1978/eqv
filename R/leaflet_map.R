@@ -11,6 +11,7 @@
 #' @export
 #'
 #' @importFrom leaflet leaflet addTiles addCircleMarkers
+#' @importFrom magrittr %>%
 #'
 #' @examples
 #' \dontrun{
